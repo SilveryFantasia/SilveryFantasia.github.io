@@ -6,9 +6,6 @@ require 'functions.php';
 
 	<!--
 
-Camwhores.tv video downloader
-Also works with private vids
-
   __  __           _        _             _____                        
  |  \/  |         | |      | |           |  __ \                       
  | \  / | __ _  __| | ___  | |__  _   _  | |  | | __ _ _   _ _ __ ___  
@@ -110,6 +107,32 @@ if(isset($_POST['sumbitVideoURL'])){
 		$fetch = checkFileValidity(get_string_between('$$' . $link,'$$','&cv3'));
 	}
 
+	/*
+	
+	Another case where ddl link starts with "vX" instead of "userX"
+	*/
+	$cv = get_string_between($random,'cv=','&');
+	$cv2 = get_string_between($random,'cv2=','&');
+	$cv3 = get_string_between($random . '/','cv3=','/');
+	$lr = '312500'; // not sure about this, it seems not to change over time
+	// The download link generated
+	$link = 'http://' . $user . '.camwhores.tv/remote_control.php?time='. $time . '&cv=' . $cv . '&lr='. $lr .'&cv2=' . $cv2 . '&file=/'. $folderID .'/' . $videoID .'/' . $videoID . '.mp4&cv3=' . $cv3;
+	$fetch = false;
+	// Showing download link if we have correct parameters
+	if(checkFileValidity(get_string_between('$$' . $link,'$$','&cv3'))){
+		$fetch = true;
+	}else{
+		if(strpos($user, 'user') !== false){
+			$user = "v6";
+		}
+		else
+		{
+			$user = "user9";
+		}
+		
+		$link = 'http://' . $user . '.camwhores.tv/remote_control.php?time='. $time . '&cv=' . $cv . '&lr='. $lr .'&cv2=' . $cv2 . '&file=/'. $folderID .'/' . $videoID .'/' . $videoID . '.mp4&cv3=' . $cv3;
+		$fetch = checkFileValidity(get_string_between('$$' . $link,'$$','&cv3'));
+	}
 
 if($fetch){
 
